@@ -1,4 +1,3 @@
-import requests
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
@@ -13,19 +12,6 @@ driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"
 driver.get(ELG_URL)
 page_html = driver.page_source
 
-
-
-
-"""
-# URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule"
-URL = "https://www.google.com/search?q=euroleague+schedule&amp;sca_esv=599926585&amp;hl=en&amp;gbv=1&amp;sei=CAqrZd-ZBqnWhbIP5daG4Ag"
-cookies = {"CONSENT": "YES+cb.20240114-08-p0.cs+FX+111"}
-headers = {
-    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0"
-}
-page = requests.get(URL, cookies=cookies, headers=headers)
-print(page.url)
-"""
 
 soup = BeautifulSoup(page_html, "html.parser")
 trs = soup.find_all(attrs={'data-start-time': True})
