@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
 import time
+
+IS_HEADLESS = True
 
 ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11kk5tfhf5;3;/m/0b740cl;mt;fp;1;;;"
 NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1vp6v;3;/m/05jvx;mt;fp;1;;;"
@@ -29,14 +32,16 @@ def scroll_down(driver):
             break
         ll = nl
 
-driver = webdriver.Firefox()
+opts = Options()
+opts.headless = IS_HEADLESS
+driver = webdriver.Firefox(options=opts)
 driver.get("https://www.google.com/404error")
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
 driver.get(ELG_URL)
 time.sleep(5)
 scroll_down(driver)
 page_html = driver.page_source
-driver.close()
+driver.quit()
 
 
 soup = BeautifulSoup(page_html, "html.parser")
@@ -64,7 +69,3 @@ for tr in trs:
 for key in list(games.keys()):
     print(key)
 print("trs:", trs_counter, "games:", len(games))
-
-
-#for td in tds[13:]:
-#    print(td.prettify())

@@ -1,0 +1,4 @@
+- [ ] Filter past dates
+- [ ] Export as CSV
+- [ ] Investigate NBA not working
+- [ ] Investigate better way to wait for page load
