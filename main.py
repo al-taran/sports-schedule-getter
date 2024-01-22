@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 import time
+import datetime
 
 IS_HEADLESS = True
 
@@ -47,11 +48,17 @@ driver.quit()
 soup = BeautifulSoup(page_html, "html.parser")
 trs = soup.find_all(attrs={'data-start-time': True})
 
+# Get time in ISO 8601
+now_time = datetime.datetime.now().isoformat()
+
 games = {}
 trs_counter = 0
 for tr in trs:
     trs_counter += 1
     game_time = tr['data-start-time']
+    if game_time < now_time:
+        print("Past game:", game_time)
+        continue
     tds = tr.find_all("td")
     team_one = tds[13].find("span").decode_contents()
     team_two = tds[16].find("span").decode_contents()
