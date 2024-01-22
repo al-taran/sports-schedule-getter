@@ -1,1 +1,3 @@
 geckodriver.log
+calendar-output/*
+!calendar-output/example.csv

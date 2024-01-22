@@ -1,4 +1,6 @@
 - [x] Filter past dates
-- [ ] Export as CSV
-- [ ] Investigate NBA not working
+- [x] Export as CSV
+- [ ] Add filters for your teams
 - [ ] Investigate better way to wait for page load
+- [ ] Investigate NBA not working
+- [ ] Add filters for your times
