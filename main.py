@@ -65,8 +65,15 @@ for tr in trs:
         print("Past game:", game_time)
         continue
     tds = tr.find_all("td")
-    team_one = tds[13].find("span").decode_contents()
-    team_two = tds[16].find("span").decode_contents()
+
+    spans = []
+    for td in tds:
+        span = td.select("tr.L5Kkcd span")
+        if span:
+            spans.append(span[0].decode_contents())
+
+    team_one = spans[0]
+    team_two = spans[1]
     teams = [team_one, team_two]
     teams.sort()
 
