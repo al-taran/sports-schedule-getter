@@ -43,7 +43,7 @@ opts.headless = IS_HEADLESS
 driver = webdriver.Firefox(options=opts)
 driver.get("https://www.google.com/404error")
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
-driver.get(ELG_URL)
+driver.get(NBA_URL)
 time.sleep(WAIT_TIME)
 scroll_down(driver)
 page_html = driver.page_source
