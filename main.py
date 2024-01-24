@@ -7,10 +7,14 @@ import datetime
 import dateutil.parser
 
 IS_HEADLESS = True
-WAIT_TIME = 1 # in seconds
+WAIT_TIME = 2 # in seconds
 
 ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11kk5tfhf5;3;/m/0b740cl;mt;fp;1;;;"
 NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1vp6v;3;/m/05jvx;mt;fp;1;;;"
+KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
+NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
+
+SCHEDULE_URL = NBA_URL
 
 cal_file = open("./calendar-output/elg-file.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
@@ -43,7 +47,7 @@ opts.headless = IS_HEADLESS
 driver = webdriver.Firefox(options=opts)
 driver.get("https://www.google.com/404error")
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
-driver.get(NBA_URL)
+driver.get(SCHEDULE_URL)
 time.sleep(WAIT_TIME)
 scroll_down(driver)
 page_html = driver.page_source
@@ -51,7 +55,7 @@ driver.quit()
 
 
 soup = BeautifulSoup(page_html, "html.parser")
-trs = soup.find_all(attrs={'data-start-time': True})
+trs = soup.select("td.liveresults-sports-immersive__match-tile div[data-start-time]")
 
 # Get time in ISO 8601
 now_time = datetime.datetime.now().isoformat()
