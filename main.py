@@ -14,7 +14,7 @@ NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1
 KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
 NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
 
-SCHEDULE_URL = NBA_URL
+SCHEDULE_URL = NHL_URL
 
 cal_file = open("./calendar-output/elg-file.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
@@ -65,9 +65,12 @@ trs_counter = 0
 for tr in trs:
     trs_counter += 1
     game_time = tr['data-start-time']
+
+    # Filter out past games
     if game_time < now_time:
-        print("Past game:", game_time)
+        # print("Past game:", game_time)
         continue
+
     tds = tr.find_all("td")
 
     spans = []
@@ -75,7 +78,12 @@ for tr in trs:
         span = td.select("tr.L5Kkcd span")
         if span:
             spans.append(span[0].decode_contents())
-
+    if len(spans) != 2:
+        print("\n\n\n")
+        print(tr.prettify())
+        print("Couldn't get teams, see element above.")
+        print("\n\n\n")
+        continue
     team_one = spans[0]
     team_two = spans[1]
     teams = [team_one, team_two]

@@ -2,7 +2,7 @@
 - [x] Export as CSV
 - [x] Investigate NBA not working
 - [x] Investigate NHL not working
-- [ ] Investigate why spans come out empty
+- [x] Investigate why spans come out empty
 - [ ] Investigate better way to wait for page load
 - [ ] Add filters for your teams
 - [ ] Add filters for your times
