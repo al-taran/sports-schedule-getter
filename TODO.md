@@ -7,3 +7,4 @@
 - [ ] Add filters for your teams
 - [ ] Add filters for your times
 - [ ] Deal with BST
+- [ ] Add timeout and try-again when page doesn't load
