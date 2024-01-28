@@ -1,40 +1,61 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-import time
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.wait import WebDriverWait
 import datetime
 import dateutil.parser
+import time
 
 IS_HEADLESS = True
-WAIT_TIME = 2 # in seconds
+WAIT_TIME = 1 # in seconds
 
 ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11kk5tfhf5;3;/m/0b740cl;mt;fp;1;;;"
 NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1vp6v;3;/m/05jvx;mt;fp;1;;;"
 KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
 NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
 
-SCHEDULE_URL = NHL_URL
+SCHEDULE_URL = NBA_URL
+
+opts = Options()
+if IS_HEADLESS:
+    opts.add_argument("--headless=new")
+driver = webdriver.Chrome(options=opts)
+wait = WebDriverWait(driver, timeout=10)
 
 cal_file = open("./calendar-output/elg-file.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
 
+def get_async_ei():
+    return driver.find_element(By.CSS_SELECTOR, '#liveresults-sports-immersive__updatable-league-matches.yf').get_attribute('async-ei')
+
+def is_fs_displayed():
+    is_fullscreen_loaded = driver.find_element(By.ID, 'liveresults-sports-immersive__league-fullpage').is_displayed()
+    # print("is_fullscreen_loaded?", is_fullscreen_loaded)
+    return is_fullscreen_loaded
+
+
+def is_page_loaded(async_ei_before):
+    async_ei_after = get_async_ei()
+    print(f"before:{async_ei_before}, after:{async_ei_after}")
+    return async_ei_before != async_ei_after
 
 def scroll_down(driver):
     """A method for scrolling the page."""
-    els = driver.find_elements(By.CLASS_NAME, 'GVj7ae')
+    els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
+    async_ei_before = get_async_ei()
     # Get num of elements
     ll = len(els)
     print("ll", ll)
     while True:
         print("scrolling")
         # Scroll down to the bottom.
-        # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         driver.execute_script("arguments[0].scrollIntoView();", els[-1])
-        # Wait to load the page.
-        time.sleep(WAIT_TIME)
-        # See if new els are present
-        els = driver.find_elements(By.CLASS_NAME, 'GVj7ae')
+        wait.until(lambda _: is_page_loaded(async_ei_before))
+        async_ei_after = get_async_ei()
+        async_ei_before = async_ei_after
+        time.sleep(WAIT_TIME) # Give elements some extra time to get loaded or sometimes it will exit loop prematurely
+        els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
         nl = len(els)
         print("nl", nl)
 
@@ -42,13 +63,11 @@ def scroll_down(driver):
             break
         ll = nl
 
-opts = Options()
-opts.headless = IS_HEADLESS
-driver = webdriver.Firefox(options=opts)
-driver.get("https://www.google.com/404error")
+
+driver.get("https://www.google.com/404error") # Go to a non-existing page to allow to set cookies
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
 driver.get(SCHEDULE_URL)
-time.sleep(WAIT_TIME)
+wait.until(lambda d: is_fs_displayed())
 scroll_down(driver)
 page_html = driver.page_source
 driver.quit()

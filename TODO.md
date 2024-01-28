@@ -3,8 +3,11 @@
 - [x] Investigate NBA not working
 - [x] Investigate NHL not working
 - [x] Investigate why spans come out empty
-- [ ] Investigate better way to wait for page load
+- [x] Investigate better way to wait for page load
 - [ ] Add filters for your teams
-- [ ] Add filters for your times
 - [ ] Deal with BST
+- [ ] Add filters for your times
+- [ ] Implement iterating through different leagues and filtering your teams in one go
+- [ ] Turn request into JSON
+- [ ] Investigate why selenium doesn't kill process?
 - [ ] Add timeout and try-again when page doesn't load
