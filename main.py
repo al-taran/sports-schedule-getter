@@ -47,21 +47,32 @@ def scroll_down(driver):
     # Get num of elements
     ll = len(els)
     print("ll", ll)
+    is_match_detected = False
     while True:
         print("scrolling")
         # Scroll down to the bottom.
         driver.execute_script("arguments[0].scrollIntoView();", els[-1])
-        wait.until(lambda _: is_page_loaded(async_ei_before))
+        if not is_match_detected:
+            wait.until(lambda _: is_page_loaded(async_ei_before))
+        else:
+            time.sleep(WAIT_TIME) # Give elements some extra time to get loaded or sometimes it will exit loop prematurely
         async_ei_after = get_async_ei()
         async_ei_before = async_ei_after
-        #time.sleep(WAIT_TIME) # Give elements some extra time to get loaded or sometimes it will exit loop prematurely
         els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
         nl = len(els)
         print("nl", nl)
 
         if ll == nl:
-            break
-        ll = nl
+            # Match was detected before so assume that we got all the games we could get
+            if is_match_detected:
+                break
+            # Match wasn't detected before so give it one more run to make sure it's not just loading
+            else:
+                is_match_detected = True
+                continue
+        else:
+            ll = nl
+            is_match_detected = False # Page was loading so we can reset the value
 
 
 driver.get("https://www.google.com/404error") # Go to a non-existing page to allow to set cookies
