@@ -4,7 +4,7 @@
 - [x] Investigate NHL not working
 - [x] Investigate why spans come out empty
 - [x] Investigate better way to wait for page load
-- [ ] Add filters for your teams
+- [x] Add filters for your teams
 - [ ] Deal with BST
 - [ ] Add filters for your times
 - [ ] Implement iterating through different leagues and filtering your teams in one go

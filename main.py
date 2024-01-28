@@ -17,6 +17,9 @@ NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxw
 
 SCHEDULE_URL = NBA_URL
 
+include_teams = []
+exclude_teams = []
+
 opts = Options()
 if IS_HEADLESS:
     opts.add_argument("--headless=new")
@@ -93,6 +96,10 @@ now_time = datetime.datetime.now().isoformat()
 games = {}
 trs_counter = 0
 for tr in trs:
+    is_filtered = False # Don't filter by default
+    if len(include_teams):
+        is_filtered = True # Filter if included teams present
+
     trs_counter += 1
     game_time = tr['data-start-time']
 
@@ -117,6 +124,18 @@ for tr in trs:
     team_one = spans[0]
     team_two = spans[1]
     teams = [team_one, team_two]
+
+    for team in teams:
+        if team in include_teams:
+            is_filtered = False
+            break
+        elif team in exclude_teams:
+            is_filtered = True
+
+    
+    if is_filtered: # Game got filtered out
+        continue
+
     teams.sort()
 
     team_hash = game_time + teams[0] + teams[1]
