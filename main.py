@@ -54,7 +54,7 @@ def scroll_down(driver):
         wait.until(lambda _: is_page_loaded(async_ei_before))
         async_ei_after = get_async_ei()
         async_ei_before = async_ei_after
-        time.sleep(WAIT_TIME) # Give elements some extra time to get loaded or sometimes it will exit loop prematurely
+        #time.sleep(WAIT_TIME) # Give elements some extra time to get loaded or sometimes it will exit loop prematurely
         els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
         nl = len(els)
         print("nl", nl)
@@ -67,7 +67,7 @@ def scroll_down(driver):
 driver.get("https://www.google.com/404error") # Go to a non-existing page to allow to set cookies
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
 driver.get(SCHEDULE_URL)
-wait.until(lambda d: is_fs_displayed())
+wait.until(lambda _: is_fs_displayed())
 scroll_down(driver)
 page_html = driver.page_source
 driver.quit()
