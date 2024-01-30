@@ -17,8 +17,13 @@ NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxw
 
 SCHEDULE_URL = NBA_URL
 
-include_teams = []
+include_teams = ['Mavericks', 'Nuggets', 'Bucks']
 exclude_teams = []
+
+game_after = {'hour': 6, 'minute': 0}
+game_before = {'hour': 23, 'minute': 59}
+
+
 
 opts = Options()
 if IS_HEADLESS:
@@ -91,7 +96,7 @@ soup = BeautifulSoup(page_html, "html.parser")
 trs = soup.select("td.liveresults-sports-immersive__match-tile div[data-start-time]")
 
 # Get time in ISO 8601
-now_time = datetime.datetime.now().isoformat()
+now_time = datetime.datetime.utcnow().isoformat()
 
 games = {}
 trs_counter = 0
@@ -106,6 +111,13 @@ for tr in trs:
     # Filter out past games
     if game_time < now_time:
         # print("Past game:", game_time)
+        continue
+
+    parsed_date = dateutil.parser.isoparse(game_time)
+    time_filter_floor = parsed_date.replace(hour=game_after['hour'], minute=game_after['minute'], second=0, microsecond=0)
+    time_filter_ceiling = parsed_date.replace(hour=game_before['hour'], minute=game_before['minute'], second=0, microsecond=0)
+    if time_filter_floor > parsed_date or parsed_date > time_filter_ceiling:
+        print("Game filtered out by time:", parsed_date)
         continue
 
     tds = tr.find_all("td")
@@ -143,7 +155,6 @@ for tr in trs:
     if team_hash not in games:
         games[team_hash] = {'game_time': game_time, 'team_home': team_one, 'team_away': team_two}
         subject = team_one + " vs " + team_two
-        parsed_date = dateutil.parser.isoparse(game_time)
         start_date = f"{parsed_date.month}/{parsed_date.day}/{parsed_date.year}"
         start_time = f"{parsed_date.hour:02}:{parsed_date.minute:02}"
         end_date = f"{parsed_date.month}/{parsed_date.day}/{parsed_date.year}"
