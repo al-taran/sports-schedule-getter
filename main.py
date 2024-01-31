@@ -6,6 +6,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 import datetime
 import dateutil.parser
 import time
+import pytz
+
+LOCAL_TZ = pytz.timezone("Europe/London")
+UTC_TZ = pytz.timezone("UTC")
 
 IS_HEADLESS = True
 WAIT_TIME = 1 # in seconds
@@ -15,14 +19,13 @@ NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1
 KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
 NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
 
-SCHEDULE_URL = NBA_URL
+SCHEDULE_URL = ELG_URL
 
-include_teams = ['Mavericks', 'Nuggets', 'Bucks']
+include_teams = []
 exclude_teams = []
 
 game_after = {'hour': 6, 'minute': 0}
 game_before = {'hour': 23, 'minute': 59}
-
 
 
 opts = Options()
@@ -110,12 +113,19 @@ for tr in trs:
 
     # Filter out past games
     if game_time < now_time:
-        # print("Past game:", game_time)
+        #print("Past game:", game_time)
         continue
 
     parsed_date = dateutil.parser.isoparse(game_time)
-    time_filter_floor = parsed_date.replace(hour=game_after['hour'], minute=game_after['minute'], second=0, microsecond=0)
-    time_filter_ceiling = parsed_date.replace(hour=game_before['hour'], minute=game_before['minute'], second=0, microsecond=0)
+    time_filter_floor = LOCAL_TZ.localize(datetime.datetime(\
+        year=parsed_date.year, month=parsed_date.month, day=parsed_date.day, \
+        hour=game_after['hour'], minute=game_after['minute'], \
+        second=0)).astimezone(UTC_TZ)
+    time_filter_ceiling = LOCAL_TZ.localize(datetime.datetime(\
+        year=parsed_date.year,month=parsed_date.month, day=parsed_date.day, \
+        hour=game_before['hour'], minute=game_before['minute'], \
+        second=0)).astimezone(UTC_TZ)
+    #print(f"floor {time_filter_floor} ceiling {time_filter_ceiling} date {parsed_date}")
     if time_filter_floor > parsed_date or parsed_date > time_filter_ceiling:
         print("Game filtered out by time:", parsed_date)
         continue
@@ -152,13 +162,15 @@ for tr in trs:
 
     team_hash = game_time + teams[0] + teams[1]
 
+    local_parsed_date = parsed_date.astimezone(LOCAL_TZ)
+
     if team_hash not in games:
         games[team_hash] = {'game_time': game_time, 'team_home': team_one, 'team_away': team_two}
         subject = team_one + " vs " + team_two
-        start_date = f"{parsed_date.month}/{parsed_date.day}/{parsed_date.year}"
-        start_time = f"{parsed_date.hour:02}:{parsed_date.minute:02}"
-        end_date = f"{parsed_date.month}/{parsed_date.day}/{parsed_date.year}"
-        end_time = f"{(parsed_date.hour + 1):02}:{parsed_date.minute:02}"
+        start_date = f"{local_parsed_date.month}/{local_parsed_date.day}/{local_parsed_date.year}"
+        start_time = f"{local_parsed_date.hour:02}:{local_parsed_date.minute:02}"
+        end_date = f"{local_parsed_date.month}/{local_parsed_date.day}/{local_parsed_date.year}"
+        end_time = f"{(local_parsed_date.hour + 1):02}:{local_parsed_date.minute:02}"
         result_str = f"{subject}, {start_date}, {start_time}, {end_date}, {end_time}\n"
         cal_file.write(result_str)
 

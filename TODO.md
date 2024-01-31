@@ -1,3 +1,4 @@
+### Must do:
 - [x] Filter past dates
 - [x] Export as CSV
 - [x] Investigate NBA not working
@@ -6,7 +7,11 @@
 - [x] Investigate better way to wait for page load
 - [x] Add filters for your teams
 - [x] Add filters for your times
-- [ ] Figure out TZ issues
+- [x] Figure out TZ issues
 - [ ] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
 - [ ] Investigate why selenium doesn't kill process?
 - [ ] Add timeout and try-again when page doesn't load
+
+### Nice to have:
+- [ ] Web UI
+- [ ] Automatic calendar upload
