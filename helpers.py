@@ -11,7 +11,7 @@ def get_async_ei(driver):
 
 def is_fs_displayed(driver):
     is_fullscreen_loaded = driver.find_element(By.ID, 'liveresults-sports-immersive__league-fullpage').is_displayed()
-    # print("is_fullscreen_loaded?", is_fullscreen_loaded)
+    print("is_fullscreen_loaded?", is_fullscreen_loaded)
     return is_fullscreen_loaded
 
 
@@ -21,11 +21,9 @@ def is_page_loaded(driver, async_ei_before):
     return async_ei_before != async_ei_after
 
 
-def get_results(driver, request):
+def get_results(driver, calendar_url):
     wait = WebDriverWait(driver, timeout=WEB_DRIVER_TIMEOUT)
     
-    calendar_url = request['url']
-
     driver.get(calendar_url)
     wait.until(lambda _: is_fs_displayed(driver))
     scroll_down(driver)

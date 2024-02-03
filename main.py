@@ -29,33 +29,27 @@ calendar_requests = {
             "url": NBA_URL, # URL of your google schedule
             "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
             "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
-            "includeTeams": ['Mavericks', 'Nuggets'], # Optional, if included only get games with these teams
-            "excludeTeams": ['Magic'], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
+            "includeTeams": [], # Optional, if included only get games with these teams
+            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
-            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what
+            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
         }
     ]
 }
 
-
-SCHEDULE_URL = ELG_URL
-
-include_teams = []
-exclude_teams = []
-
-game_after = {'hour': 6, 'minute': 0}
-game_before = {'hour': 23, 'minute': 59}
-
 cal_file = open("./calendar-output/elg-file.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
-
 
 driver.get("https://www.google.com/404error") # Go to a non-existing page to allow to set cookies
 driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
 
 for request in calendar_requests["requests"]:
-
-    page_html = helpers.get_results(driver, request)
+    CALENDAR_URL = request["url"]
+    INCLUDE_TEAMS = request["includeTeams"] if "includeTeams" in request else []
+    EXCLUDE_TEAMS = request["excludeTeams"] if "excludeTeams" in request else []
+    GAME_AFTER = request["gameTimeFloor"]
+    GAME_BEFORE = request["gameTimeCeiling"]
+    page_html = helpers.get_results(driver, CALENDAR_URL)
 
     soup = BeautifulSoup(page_html, "html.parser")
     trs = soup.select("td.liveresults-sports-immersive__match-tile div[data-start-time]")
@@ -67,27 +61,29 @@ for request in calendar_requests["requests"]:
     trs_counter = 0
     for tr in trs:
         is_filtered = False # Don't filter by default
-        if len(include_teams):
+        if len(INCLUDE_TEAMS):
             is_filtered = True # Filter if included teams present
 
         trs_counter += 1
         game_time = tr['data-start-time']
 
-        # Filter out past games
+        # Time filtering
         if game_time < now_time:
             #print("Past game:", game_time)
             continue
 
         parsed_date = dateutil.parser.isoparse(game_time)
+
         time_filter_floor = LOCAL_TZ.localize(datetime.datetime(\
             year=parsed_date.year, month=parsed_date.month, day=parsed_date.day, \
-            hour=game_after['hour'], minute=game_after['minute'], \
+            hour=GAME_AFTER['hour'], minute=GAME_AFTER['minute'], \
             second=0)).astimezone(UTC_TZ)
+
         time_filter_ceiling = LOCAL_TZ.localize(datetime.datetime(\
             year=parsed_date.year,month=parsed_date.month, day=parsed_date.day, \
-            hour=game_before['hour'], minute=game_before['minute'], \
+            hour=GAME_BEFORE['hour'], minute=GAME_BEFORE['minute'], \
             second=0)).astimezone(UTC_TZ)
-        #print(f"floor {time_filter_floor} ceiling {time_filter_ceiling} date {parsed_date}")
+
         if time_filter_floor > parsed_date or parsed_date > time_filter_ceiling:
             print("Game filtered out by time:", parsed_date)
             continue
@@ -110,10 +106,10 @@ for request in calendar_requests["requests"]:
         teams = [team_one, team_two]
 
         for team in teams:
-            if team in include_teams:
+            if team in INCLUDE_TEAMS:
                 is_filtered = False
                 break
-            elif team in exclude_teams:
+            elif team in EXCLUDE_TEAMS:
                 is_filtered = True
 
 

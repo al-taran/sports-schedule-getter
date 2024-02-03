@@ -9,7 +9,9 @@
 - [x] Add filters for your times
 - [x] Figure out TZ issues
 - [ ] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
+- [ ] Disable time filtering if kw not present
 - [ ] Add JSON option for TZ input/output
+- [ ] Add keywords for common URLs, e.g. nba, elg, etc
 - [ ] Add timeout and try-again when page doesn't load
 - [ ] Investigate why selenium doesn't kill process?
 
