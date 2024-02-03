@@ -9,8 +9,9 @@
 - [x] Add filters for your times
 - [x] Figure out TZ issues
 - [ ] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
-- [ ] Investigate why selenium doesn't kill process?
+- [ ] Add JSON option for TZ input/output
 - [ ] Add timeout and try-again when page doesn't load
+- [ ] Investigate why selenium doesn't kill process?
 
 ### Nice to have:
 - [ ] Web UI

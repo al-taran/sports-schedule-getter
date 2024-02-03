@@ -8,16 +8,41 @@ import dateutil.parser
 import time
 import pytz
 
-LOCAL_TZ = pytz.timezone("Europe/London")
-UTC_TZ = pytz.timezone("UTC")
-
 IS_HEADLESS = True
 WAIT_TIME = 1 # in seconds
+
+
+opts = Options()
+if IS_HEADLESS:
+    opts.add_argument("--headless=new")
+driver = webdriver.Chrome(options=opts)
+wait = WebDriverWait(driver, timeout=10)
+
 
 ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11kk5tfhf5;3;/m/0b740cl;mt;fp;1;;;"
 NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1vp6v;3;/m/05jvx;mt;fp;1;;;"
 KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
 NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
+
+
+requests = {
+    "requests": [
+        {
+            "url": NBA_URL, # URL of your google schedule
+            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
+            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
+            "includeTeams": ['Mavericks', 'Nuggets'], # Optional, if included only get games with these teams
+            "excludeTeams": ['Magic'], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
+            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what
+        }
+    ]
+}
+
+LOCAL_TZ = pytz.timezone("Europe/London")
+UTC_TZ = pytz.timezone("UTC")
+
+
 
 SCHEDULE_URL = ELG_URL
 
@@ -28,11 +53,6 @@ game_after = {'hour': 6, 'minute': 0}
 game_before = {'hour': 23, 'minute': 59}
 
 
-opts = Options()
-if IS_HEADLESS:
-    opts.add_argument("--headless=new")
-driver = webdriver.Chrome(options=opts)
-wait = WebDriverWait(driver, timeout=10)
 
 cal_file = open("./calendar-output/elg-file.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
