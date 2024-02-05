@@ -33,6 +33,13 @@ calendar_requests = {
             "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
             "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+        },
+        {
+            "url": ELG_URL, # URL of your google schedule
+            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
+            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
+            "includeTeams": ['Partizan', 'Real Madrid', 'Žalgiris', 'Crvena Zvezda'], # Optional, if included only get games with these teams
+            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
         }
     ]
 }
@@ -136,8 +143,11 @@ for request in calendar_requests["requests"]:
             print("dupe found:", team_hash)
 
 
-    cal_file.close()
 
     for key in list(games.keys()):
         print(key)
     print("trs:", trs_counter, "games:", len(games))
+
+
+driver.quit()
+cal_file.close()

@@ -28,7 +28,6 @@ def get_results(driver, calendar_url):
     wait.until(lambda _: is_fs_displayed(driver))
     scroll_down(driver)
     page_html = driver.page_source
-    driver.quit()
     return page_html
 
 

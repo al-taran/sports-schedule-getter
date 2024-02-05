@@ -8,8 +8,9 @@
 - [x] Add filters for your teams
 - [x] Add filters for your times
 - [x] Figure out TZ issues
-- [ ] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
+- [x] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
 - [ ] Disable time filtering if kw not present
+- [ ] Case insensitive team filter
 - [ ] Add JSON option for TZ input/output
 - [ ] Add keywords for common URLs, e.g. nba, elg, etc
 - [ ] Add timeout and try-again when page doesn't load
