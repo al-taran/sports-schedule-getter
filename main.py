@@ -15,10 +15,10 @@ if IS_HEADLESS:
 driver = webdriver.Chrome(options=opts)
 
 
-ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11kk5tfhf5;3;/m/0b740cl;mt;fp;1;;;"
-NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11snv1vp6v;3;/m/05jvx;mt;fp;1;;;"
-KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11ssq6w841;7;/m/03ykpkx;mt;fp;1;;;"
-NHL_URL = "https://www.google.com/search?hl=en&q=nhl%20schedule#sie=lg;/g/11txxwrx35;7;/m/05gwr;mt;fp;1;;;"
+ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11y3_j261y;3;/m/0b740cl;mt;fp;1;;;"
+NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11y43tsvgm;3;/m/05jvx;mt;fp;1;;;"
+KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11y446hx0g;7;/m/03ykpkx;mt;fp;1;;;"
+NHL_URL = "https://www.google.com/search?q=nhl+schedule&sca_esv=308f0487964e9284&hl=en&sxsrf=ADLYWIJzDAJrG2BS7gyVcOZc7vvsMuFJGw%3A1730998829792&ei=LfIsZ5L_L7e0hbIP0aGVwAE&ved=0ahUKEwjSyeyS2cqJAxU3WkEAHdFQBRgQ4dUDCA8&uact=5&oq=nhl+schedule&gs_lp=Egxnd3Mtd2l6LXNlcnAiDG5obCBzY2hlZHVsZTIKEAAYgAQYQxiKBTILEAAYgAQYkQIYigUyBRAAGIAEMgsQABiABBiRAhiKBTIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABEjsD1C2CFjiC3ABeAGQAQCYAdwBoAHWAqoBBTAuMS4xuAEDyAEA-AEBmAIDoAKIA8ICChAAGLADGNYEGEfCAg0QABiABBiwAxhDGIoFwgIIEAAYBxgKGB7CAgcQABiABBgKmAMAiAYBkAYKkgcFMS4xLjGgB5wM&sclient=gws-wiz-serp#sie=lg;/g/11y3wzbrc7;7;/m/05gwr;mt;fp;1;;;"
 
 LOCAL_TZ = pytz.timezone("Europe/London")
 UTC_TZ = pytz.timezone("UTC")
@@ -28,8 +28,8 @@ calendar_requests = {
         {
             "url": NBA_URL, # URL of your google schedule
             "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
-            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
-            "includeTeams": [], # Optional, if included only get games with these teams
+            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or if not present - "UTC"
+            "includeTeams": ['Mavericks', 'Nuggets'], # Optional, if included only get games with these teams
             "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
             "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
@@ -38,17 +38,37 @@ calendar_requests = {
             "url": ELG_URL, # URL of your google schedule
             "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
             "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
-            "includeTeams": ['Partizan', 'Real Madrid', 'Žalgiris', 'Crvena Zvezda'], # Optional, if included only get games with these teams
-            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
-        }
+            "includeTeams": ['Žalgiris'], # Optional, if included only get games with these teams
+            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+
+        },
+        {
+            "url": KHL_URL, # URL of your google schedule
+            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
+            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
+            "includeTeams": ['CSKA', 'Torpedo', 'Traktor'], # Optional, if included only get games with these teams
+            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+
+       },
+       {
+           "url": NHL_URL, # URL of your google schedule
+           "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
+           "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or if not present - "UTC"
+           "includeTeams": ['Capitals', 'Lightning'], # Optional, if included only get games with these teams
+           "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
+           "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
+           "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+
+       }
     ]
 }
 
-cal_file = open("./calendar-output/elg-file.csv", "w")
+cal_file = open("./calendar-output/sports-calendar.csv", "w")
 cal_file.write("Subject, Start Date, Start Time, End Date, End Time\n")
 
-driver.get("https://www.google.com/404error") # Go to a non-existing page to allow to set cookies
-driver.add_cookie({"name": "CONSENT", "value": "YES+cb.20240114-08-p0.cs+FX+111"})
+helpers.decline_cookies(driver)
 
 for request in calendar_requests["requests"]:
     CALENDAR_URL = request["url"]
