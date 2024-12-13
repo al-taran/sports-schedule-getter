@@ -2,3 +2,4 @@ geckodriver.log
 calendar-output/*
 !calendar-output/example.csv
 __pycache__
+err.txt
