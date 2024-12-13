@@ -1,3 +1,6 @@
+
+## TODO
+
 ### Must do:
 - [x] Filter past dates
 - [x] Export as CSV
@@ -15,6 +18,9 @@
 - [ ] Add keywords for common URLs, e.g. nba, elg, etc
 - [ ] Add timeout and try-again when page doesn't load
 - [ ] Investigate why selenium doesn't kill process?
+- [ ] Deal with playoff mode and TBD dates
+- [ ] Add async calls if need to boost up speed?
+- [ ] Put all configs into one spot and retrieve as env vars
 
 ### Nice to have:
 - [ ] Automatic calendar upload
