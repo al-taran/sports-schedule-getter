@@ -3,9 +3,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 
 WEB_DRIVER_TIMEOUT = 10
-WAIT_TIME = 1 # in seconds
+WAIT_TIME = 2 # in seconds
 
 def get_async_ei(driver):
+    time.sleep(2)
     return driver.find_element(By.CSS_SELECTOR, '#liveresults-sports-immersive__updatable-league-matches.yf').get_attribute('async-ei')
 
 
@@ -14,16 +15,27 @@ def is_fs_displayed(driver):
     print("is_fullscreen_loaded?", is_fullscreen_loaded)
     return is_fullscreen_loaded
 
+def is_cookies_clickable(driver):
+    is_cookies_clickable = driver.find_element(By.ID, 'W0wltc').is_displayed()
+    print("is_cookies_displayed", is_cookies_clickable)
+    return is_cookies_clickable
+
+def click_cookies(driver):
+    driver.find_element(By.ID, 'W0wltc').click()
 
 def is_page_loaded(driver, async_ei_before):
     async_ei_after = get_async_ei(driver)
     print(f"before:{async_ei_before}, after:{async_ei_after}")
     return async_ei_before != async_ei_after
 
+def decline_cookies(driver):
+    wait = WebDriverWait(driver, timeout=WEB_DRIVER_TIMEOUT)
+    driver.get("http://google.com/search")
+    wait.until(lambda _: is_cookies_clickable(driver)) 
+    click_cookies(driver)
 
 def get_results(driver, calendar_url):
     wait = WebDriverWait(driver, timeout=WEB_DRIVER_TIMEOUT)
-    
     driver.get(calendar_url)
     wait.until(lambda _: is_fs_displayed(driver))
     scroll_down(driver)
@@ -36,6 +48,7 @@ def scroll_down(driver):
     wait = WebDriverWait(driver, timeout=WEB_DRIVER_TIMEOUT)
 
     els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
+    print("els", els)
     async_ei_before = get_async_ei(driver)
     # Get num of elements
     ll = len(els)
