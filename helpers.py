@@ -48,7 +48,6 @@ def scroll_down(driver):
     wait = WebDriverWait(driver, timeout=WEB_DRIVER_TIMEOUT)
 
     els = driver.find_elements(By.CLASS_NAME, 'OcbAbf')
-    print("els", els)
     async_ei_before = get_async_ei(driver)
     # Get num of elements
     ll = len(els)

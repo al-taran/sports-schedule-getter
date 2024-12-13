@@ -96,7 +96,6 @@ for request in calendar_requests["requests"]:
 
         # Time filtering
         if game_time < now_time:
-            #print("Past game:", game_time)
             continue
 
         parsed_date = dateutil.parser.isoparse(game_time)
@@ -115,6 +114,7 @@ for request in calendar_requests["requests"]:
             print("Game filtered out by time:", parsed_date)
             continue
 
+        # Process the scrape results
         tds = tr.find_all("td")
 
         spans = []
