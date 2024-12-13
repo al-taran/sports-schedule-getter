@@ -30,6 +30,7 @@ To import the CSV file into your calendar follow your calendar's instructions, s
 - [ ] Deal with playoff mode and TBD dates
 - [ ] Add async calls if need to boost up speed?
 - [ ] Put all configs into one spot and retrieve as env vars
+- [ ] Add option for derby matchups
 
 ### Nice to have:
 - [ ] Automatic calendar upload
