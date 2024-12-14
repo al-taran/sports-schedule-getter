@@ -29,6 +29,7 @@ To import the CSV file into your calendar follow your calendar's instructions, s
 - [x] Put all configs into one spot and retrieve as env vars
 - [x] Add keywords for common URLs, e.g. nba, elg, etc
 - [x] Add requirements.txt
+- [ ] If page crashes, save source as a file for debugging purposes
 - [ ] Implement a better way of defining params for league calendars
 - [ ] Add JSON option for TZ input/output
 - [ ] Disable time filtering if kw not present
