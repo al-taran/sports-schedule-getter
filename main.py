@@ -30,8 +30,6 @@ calendar_requests = {
     "requests": [
         {
             "url": NBA_URL, # URL of your google schedule
-            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
-            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or if not present - "UTC"
             "includeTeams": ['Mavericks', 'Nuggets'], # Optional, if included only get games with these teams
             "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
@@ -39,8 +37,6 @@ calendar_requests = {
         },
         {
             "url": ELG_URL, # URL of your google schedule
-            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
-            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
             "includeTeams": ['Žalgiris'], # Optional, if included only get games with these teams
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
             "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
@@ -48,8 +44,6 @@ calendar_requests = {
         },
         {
             "url": KHL_URL, # URL of your google schedule
-            "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
-            "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or "UTC"
             "includeTeams": ['CSKA', 'Torpedo', 'Traktor'], # Optional, if included only get games with these teams
             "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
             "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
@@ -57,8 +51,6 @@ calendar_requests = {
        },
        {
            "url": NHL_URL, # URL of your google schedule
-           "inputTz": "Europe/London", # Optional, if not present defaults to "UTC"
-           "outputTz": "Europe/London", # Optional, if not present defaults to `inputTz` or if not present - "UTC"
            "includeTeams": ['Capitals', 'Lightning'], # Optional, if included only get games with these teams
            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
