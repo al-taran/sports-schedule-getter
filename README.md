@@ -22,19 +22,19 @@ To import the CSV file into your calendar follow your calendar's instructions, s
 - [x] Figure out TZ issues
 - [x] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
 - [x] Put all configs into one spot and retrieve as env vars
-- [ ] Add requirements.txt
+- [x] Add keywords for common URLs, e.g. nba, elg, etc
+- [x] Add requirements.txt
 - [ ] Add JSON option for TZ input/output
 - [ ] Disable time filtering if kw not present
 - [ ] Case insensitive team filter
-- [ ] Add keywords for common URLs, e.g. nba, elg, etc
 - [ ] Add timeout and try-again when page doesn't load
 - [ ] Investigate why selenium doesn't kill process?
 - [ ] Deal with playoff mode and TBD dates
 - [ ] Add async calls if need to boost up speed?
-- [ ] Add option for derby matchups
 
 ### Nice to have:
 - [ ] Automatic calendar upload
 - [ ] Calendar auto-update
 - [ ] Web UI
 - [ ] Reminders of highlights for overnight games
+- [ ] Add option for derby matchups(two teams playing together that you wouldn't watch by themselves)
