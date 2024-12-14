@@ -1,9 +1,12 @@
+"""
+Sports calendar scraper.
+"""
+import os
+import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
-import os
-import datetime
 import dateutil.parser
 import pytz
 import helpers
@@ -29,33 +32,32 @@ driver = webdriver.Chrome(options=opts)
 calendar_requests = {
     "requests": [
         {
-            "url": NBA_URL, # URL of your google schedule
-            "includeTeams": ['Mavericks', 'Nuggets'], # Optional, if included only get games with these teams
-            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
-            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
-            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+            "url": NBA_URL,  # URL of your google schedule
+            "includeTeams": ['Mavericks', 'Nuggets'],  # Optional, if included only get games with these teams
+            "excludeTeams": [],  # Optional, will skip games with these teams(but is overriden by `includeTeams`)
+            "gameTimeFloor": {'hour': 6, 'minute': 0},  # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59}  # Before what local time are games included
         },
         {
-            "url": ELG_URL, # URL of your google schedule
-            "includeTeams": ['Žalgiris'], # Optional, if included only get games with these teams
-            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
-            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
+            "url": ELG_URL,  # URL of your google schedule
+            "includeTeams": ['Žalgiris'],  # Optional, if included only get games with these teams
+            "gameTimeFloor": {'hour': 6, 'minute': 0},  # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59}  # Before what local time are games included
 
         },
         {
-            "url": KHL_URL, # URL of your google schedule
-            "includeTeams": ['CSKA', 'Torpedo', 'Traktor'], # Optional, if included only get games with these teams
-            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
-            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
-
-       },
-       {
-           "url": NHL_URL, # URL of your google schedule
-           "includeTeams": ['Capitals', 'Lightning'], # Optional, if included only get games with these teams
-           "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
-           "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
-           "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
-       }
+            "url": KHL_URL,  # URL of your google schedule
+            "includeTeams": ['CSKA', 'Torpedo', 'Traktor'],  # Optional, if included only get games with these teams
+            "gameTimeFloor": {'hour': 6, 'minute': 0},  # After what local time are games included
+            "gameTimeCeiling": {'hour': 23, 'minute': 59}  # Before what local time are games included
+        },
+        {
+           "url": NHL_URL,  # URL of your google schedule
+           "includeTeams": ['Capitals', 'Lightning'],  # Optional, if included only get games with these teams
+           "excludeTeams": [],  # Optional, will skip games with these teams(but is overriden by `includeTeams`)
+           "gameTimeFloor": {'hour': 6, 'minute': 0},  # After what local time are games included
+           "gameTimeCeiling": {'hour': 23, 'minute': 59}  # Before what local time are games included
+        }
     ]
 }
 
@@ -81,9 +83,9 @@ for request in calendar_requests["requests"]:
     games = {}
     trs_counter = 0
     for tr in trs:
-        is_filtered = False # Don't filter by default
-        if len(INCLUDE_TEAMS):
-            is_filtered = True # Filter if included teams present
+        is_filtered = False  # Don't filter by default
+        if INCLUDE_TEAMS:
+            is_filtered = True  # Filter if included teams present
 
         trs_counter += 1
         game_time = tr['data-start-time']
@@ -94,14 +96,14 @@ for request in calendar_requests["requests"]:
 
         parsed_date = dateutil.parser.isoparse(game_time)
 
-        time_filter_floor = LOCAL_TZ.localize(datetime.datetime(\
-            year=parsed_date.year, month=parsed_date.month, day=parsed_date.day, \
-            hour=GAME_AFTER['hour'], minute=GAME_AFTER['minute'], \
+        time_filter_floor = LOCAL_TZ.localize(datetime.datetime(
+            year=parsed_date.year, month=parsed_date.month, day=parsed_date.day,
+            hour=GAME_AFTER['hour'], minute=GAME_AFTER['minute'],
             second=0)).astimezone(UTC_TZ)
 
-        time_filter_ceiling = LOCAL_TZ.localize(datetime.datetime(\
-            year=parsed_date.year,month=parsed_date.month, day=parsed_date.day, \
-            hour=GAME_BEFORE['hour'], minute=GAME_BEFORE['minute'], \
+        time_filter_ceiling = LOCAL_TZ.localize(datetime.datetime(
+            year=parsed_date.year, month=parsed_date.month, day=parsed_date.day,
+            hour=GAME_BEFORE['hour'], minute=GAME_BEFORE['minute'],
             second=0)).astimezone(UTC_TZ)
 
         if time_filter_floor > parsed_date or parsed_date > time_filter_ceiling:
@@ -130,11 +132,10 @@ for request in calendar_requests["requests"]:
             if team in INCLUDE_TEAMS:
                 is_filtered = False
                 break
-            elif team in EXCLUDE_TEAMS:
+            if team in EXCLUDE_TEAMS:
                 is_filtered = True
 
-
-        if is_filtered: # Game got filtered out
+        if is_filtered:  # Game got filtered out
             continue
 
         teams.sort()
@@ -155,8 +156,6 @@ for request in calendar_requests["requests"]:
         else:
             # The games that are shown when you first load the search
             print("dupe found:", team_hash)
-
-
 
     for key in list(games.keys()):
         print(key)
