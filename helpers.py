@@ -12,9 +12,6 @@ load_dotenv()
 WEB_DRIVER_TIMEOUT = int(os.getenv("WEB_DRIVER_TIMEOUT", 20))
 WAIT_TIME = int(os.getenv("WAIT_TIME", 4))
 
-print(WEB_DRIVER_TIMEOUT, type(WEB_DRIVER_TIMEOUT))
-print(WAIT_TIME, type(WAIT_TIME))
-
 
 def get_async_ei(driver):
     """
