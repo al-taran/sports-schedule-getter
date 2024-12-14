@@ -1,6 +1,5 @@
 beautifulsoup4==4.8.2
 python-dotenv==1.0.1
 python_dateutil==2.9.0.post0
-python_dateutil==2.7.3
 pytz==2019.3
 selenium==4.27.1
