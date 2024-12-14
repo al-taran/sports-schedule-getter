@@ -21,6 +21,8 @@ To import the CSV file into your calendar follow your calendar's instructions, s
 - [x] Add filters for your times
 - [x] Figure out TZ issues
 - [x] Turn request into JSON and implement iterating through different leagues and filtering your teams in one go
+- [x] Put all configs into one spot and retrieve as env vars
+- [ ] Add requirements.txt
 - [ ] Add JSON option for TZ input/output
 - [ ] Disable time filtering if kw not present
 - [ ] Case insensitive team filter
@@ -29,7 +31,6 @@ To import the CSV file into your calendar follow your calendar's instructions, s
 - [ ] Investigate why selenium doesn't kill process?
 - [ ] Deal with playoff mode and TBD dates
 - [ ] Add async calls if need to boost up speed?
-- [ ] Put all configs into one spot and retrieve as env vars
 - [ ] Add option for derby matchups
 
 ### Nice to have:

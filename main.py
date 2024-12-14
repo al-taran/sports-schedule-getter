@@ -1,27 +1,30 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from dotenv import load_dotenv
+import os
 import datetime
 import dateutil.parser
 import pytz
 import helpers
 
-IS_HEADLESS = True
+load_dotenv()
 
+IS_HEADLESS = True if os.getenv("IS_HEADLESS", None) == "True" else False
+
+ELG_URL = os.getenv("ELG_URL", None)
+NBA_URL = os.getenv("NBA_URL", None)
+KHL_URL = os.getenv("KHL_URL", None)
+NHL_URL = os.getenv("NHL_URL", None)
+
+tz_env = os.getenv("LOCAL_TZ", "Europe/London")
+LOCAL_TZ = pytz.timezone("Europe/London")
+UTC_TZ = pytz.timezone("UTC")
 
 opts = Options()
 if IS_HEADLESS:
     opts.add_argument("--headless=new")
 driver = webdriver.Chrome(options=opts)
-
-
-ELG_URL = "https://www.google.com/search?hl=en&q=euroleague%20schedule#sie=lg;/g/11y3_j261y;3;/m/0b740cl;mt;fp;1;;;"
-NBA_URL = "https://www.google.com/search?hl=en&q=nba%20schedule#sie=lg;/g/11y43tsvgm;3;/m/05jvx;mt;fp;1;;;"
-KHL_URL = "https://www.google.com/search?hl=en&q=khl%20schedule#sie=lg;/g/11y446hx0g;7;/m/03ykpkx;mt;fp;1;;;"
-NHL_URL = "https://www.google.com/search?q=nhl+schedule&sca_esv=308f0487964e9284&hl=en&sxsrf=ADLYWIJzDAJrG2BS7gyVcOZc7vvsMuFJGw%3A1730998829792&ei=LfIsZ5L_L7e0hbIP0aGVwAE&ved=0ahUKEwjSyeyS2cqJAxU3WkEAHdFQBRgQ4dUDCA8&uact=5&oq=nhl+schedule&gs_lp=Egxnd3Mtd2l6LXNlcnAiDG5obCBzY2hlZHVsZTIKEAAYgAQYQxiKBTILEAAYgAQYkQIYigUyBRAAGIAEMgsQABiABBiRAhiKBTIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABEjsD1C2CFjiC3ABeAGQAQCYAdwBoAHWAqoBBTAuMS4xuAEDyAEA-AEBmAIDoAKIA8ICChAAGLADGNYEGEfCAg0QABiABBiwAxhDGIoFwgIIEAAYBxgKGB7CAgcQABiABBgKmAMAiAYBkAYKkgcFMS4xLjGgB5wM&sclient=gws-wiz-serp#sie=lg;/g/11y3wzbrc7;7;/m/05gwr;mt;fp;1;;;"
-
-LOCAL_TZ = pytz.timezone("Europe/London")
-UTC_TZ = pytz.timezone("UTC")
 
 calendar_requests = {
     "requests": [
@@ -60,7 +63,6 @@ calendar_requests = {
            "excludeTeams": [], # Optional, if included doesn't get games with these teams(but is overriden by `includeTeams`)
            "gameTimeFloor": {'hour': 6, 'minute': 0}, # After what local time are games included
            "gameTimeCeiling": {'hour': 23, 'minute': 59} # Before what local time are games included
-
        }
     ]
 }
